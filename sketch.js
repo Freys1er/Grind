@@ -1,6 +1,9 @@
 let apps = [];
 let icons = [];
 
+let iconSize = height/6;
+let padding = iconSize/3;
+
 function preload() {
   let table = loadTable('https://docs.google.com/spreadsheets/d/e/2PACX-1vTWAuLn4XudySGae0MS_WttqyTjxwpDdLtooJffbZSinP15gCx0pyIlSgXbKxZnf7ysk7VkZ53bopfD/pub?gid=0&single=true&output=csv', 'csv', 'header', () => {
     for (let i = 0; i < table.getRowCount(); i++) {
@@ -21,8 +24,6 @@ function setup() {
 
 function draw() {
   background(0);
-  let iconSize = 60;
-  let padding = 20;
 
   let cols = floor(width / (iconSize + padding)); // Number of columns
   let rows = ceil(apps.length / cols); // Number of rows
@@ -61,9 +62,6 @@ function drawIcon(app, img, x, y, size) {
 }
 
 function mousePressed() {
-  let iconSize = 60;
-  let padding = 20;
-
   let cols = floor(width / (iconSize + padding)); // Number of columns
   let rows = ceil(apps.length / cols); // Number of rows
 
