@@ -1,7 +1,7 @@
 let apps = [];
 let icons = [];
 
-let iconSize = height/6;
+let iconSize = 60;
 let padding = iconSize/3;
 
 function preload() {
@@ -19,10 +19,13 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  noLoop(); // No need to continuously draw
+  noLoop(); // No need to continuously draw\
+  iconSize = 60;
 }
 
 function draw() {
+  iconSize = height/6;
+  
   background(0);
 
   let cols = floor(width / (iconSize + padding)); // Number of columns
