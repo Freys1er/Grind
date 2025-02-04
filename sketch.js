@@ -43,9 +43,9 @@ function draw() {
 
 function drawIcon(app, img, x, y, size) {
   fill(255);
-  stroke(200);
-  strokeWeight(0);
-  rect(x, y, size, size, 15); // Draw the rounded rectangle
+  stroke(0);
+  strokeWeight(30);
+  rect(x-padding/4, y-padding/4, size+padding/2, size+padding/2,30); // Draw the rounded rectangle
 
   if (img) {
     let gfx = createGraphics(size, size);
@@ -53,9 +53,14 @@ function drawIcon(app, img, x, y, size) {
     gfx.noFill();
     gfx.stroke(255);
     gfx.strokeWeight(2);
-    gfx.rect(0, 0, size, size, 15);
+    gfx.rect(0, 0, size, size, 30);
     image(gfx, x, y, size, size); // Draw the image with rounded corners
   }
+
+  noFill();
+  stroke(0);
+  strokeWeight(30);
+  rect(x-padding/4, y-padding/4, size+padding/2, size+padding/2,40); // Draw the rounded rectangle
 
   fill(255);
   noStroke();
