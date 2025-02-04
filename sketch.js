@@ -1,6 +1,6 @@
 let apps = [];
 let icons = [];
-
+ 
 let iconSize = 60;
 let padding = iconSize/3;
 
