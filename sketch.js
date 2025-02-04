@@ -24,7 +24,7 @@ function setup() {
 }
 
 function draw() {
-  iconSize = min(height,width)/6;
+  iconSize = min({height,width})/6;
   padding = iconSize/3;
   
   background(0);
