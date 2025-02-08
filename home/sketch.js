@@ -5,16 +5,16 @@ let iconSize = 60;
 let padding = iconSize/3;
 
 function preload() {
-  let table = loadTable('https://docs.google.com/spreadsheets/d/e/2PACX-1vTWAuLn4XudySGae0MS_WttqyTjxwpDdLtooJffbZSinP15gCx0pyIlSgXbKxZnf7ysk7VkZ53bopfD/pub?gid=0&single=true&output=csv', 'csv', 'header', () => {
-    for (let i = 0; i < table.getRowCount(); i++) {
-      let name = table.getString(i, 'name');
-      let icon = table.getString(i, 'icon');
-      let url = table.getString(i, 'url');
-      apps.push({ name, icon, url });
-      print({ name, icon, url });
-      loadImage(icon, img => icons[i] = img, () => icons[i] = null);
-    }
-  });
+    let table = loadTable('https://docs.google.com/spreadsheets/d/e/2PACX-1vQUIkukgCXVmCxGbztGHTbFyB8umF3M82jteRydSF_eXbJPjmcPTjUfVyClU-NPkHQ2V7V8wk87rKF1/pub?gid=597840129&single=true&output=csv', 'csv', 'header', () => {
+        for (let i = 0; i < table.getRowCount(); i++) {
+            let name = table.getString(i, 'name');
+            let icon = table.getString(i, 'icon');
+            let url = table.getString(i, 'url');
+            apps.push({ name, icon, url });
+            print({ name, icon, url });
+            loadImage(icon, img => icons[i] = img, () => icons[i] = null);
+        }
+    });
 }
 
 function setup() {
