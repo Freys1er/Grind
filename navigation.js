@@ -98,7 +98,7 @@ function displayNav(x) {
     }
 
     if (hold < 10 && mouseIsPressed && mouseY > height * 0.91) {
-        window.location.replace("https://vigilant-space-goldfish-q7v6q7qggq5c6gxp-5502.app.github.dev/" + names[x - 1])
+        window.location.href = window.location.origin +"/"+ names[x - 1];
     }
 
     for (let i = 0; i < xPos.length; i++) {
