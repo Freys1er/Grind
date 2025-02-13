@@ -1,7 +1,9 @@
-let iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'home', 'people', 'secret', 'share', 'status', 'vote'];
-let icons = {};
+const icons = {};
 let xPos = [];
 let t = 0;
+let hold = 0;
+
+const iconNames = ['account','cancel','chat','dropdown','event','google','home','notes','people','secret','share','status','stats','tasks','tools','vote'];
 
 function loadIcons() {
     return new Promise((resolve, reject) => {
@@ -28,25 +30,22 @@ function loadIcons() {
         }
     });
 }
+    
 let style = {};
+let loading_data = true;
 
 function setup() {
+    createCanvas(windowWidth, windowHeight);
     style = {
-        background: "rgb(0,0,0)", // Dark background
-        icon: "rgb(117,114,131)", // Slightly lighter grey for icons
-        navigationBar: "rgb(22,19,38)", // Dark bar
-
-        // Additional colors
-        primaryGold: "rgb(255, 215, 0)", // Gold for primary elements
-        accentYellow: "rgb(255, 235, 59)", // Yellow for accents
-        textPrimary: "rgb(255, 255, 255)", // White for primary text
-        textSecondary: "rgb(200, 200, 200)", // Light grey for secondary text
-        highlight: "rgb(255, 140, 0)", // Darker yellow-orange for highlights
-        border: "rgb(50, 50, 50)", // Dark grey for borders
-        hoverEffect: "rgb(100, 100, 100)", // Slightly lighter grey for hover effects
-        shadowEffect: "rgba(0, 0, 0, 0.5)", // Shadow effect
+        background: '#000000',        // Black
+        text: '#D3D3D3',              // Light Gray for primary text
+        accentColor1: '#6B8E23',      // Olive Drab
+        accentColor2: '#4B5320',      // Army Green
+        accentColor3: '#F0E68C',      // Khaki
+        accentColor4: '#2F4F4F',      // Dark Gray
+        iconColor: '#D3D3D3',         // Light Gray for icons
+        navBarColor: '#6B8E23',       // Olive Drab for navigation bar
     };
-
     xPos = [
         (width / 30) * 3,
         (width / 30) * 9,
@@ -55,16 +54,21 @@ function setup() {
         (width / 30) * 27,
         width
     ];
+    
+    loadIcons().then(() => {
+        loading_data = false;
+      });
 }
+
 function displayNav(x) {
     const images = [
-        icons.people,
-        icons.vote,
-        icons.status,
-        icons.event,
-        icons.secret
+        icons.tasks,
+        icons.stats,
+        icons.home,
+        icons.notes,
+        icons.tools
     ];
-    const names = ["Social", "Issues", "Home", "Events", "Secrets"];
+    const names = ["Tasks", "Stats", "Home", "Notes","Tools"];
 
     fill(255);
     textSize(18);
@@ -98,7 +102,7 @@ function displayNav(x) {
     }
 
     if (hold < 10 && mouseIsPressed && mouseY > height * 0.91) {
-        window.location.replace = "freys1er.github.io/cult/" + names[x - 1];
+        window.location.href = "https://freys1er.github.io/Grind/" + names[x - 1];
     }
 
     for (let i = 0; i < xPos.length; i++) {
@@ -113,7 +117,7 @@ function displayNav(x) {
     if (!x) {
         x = -1;
     }
-    fill(style.navigationBar);
+    fill(style.navBarColor);
     noStroke();
     rect(0, height * 0.91, width, height);
     if (mouseY > height * 0.87) {
@@ -132,10 +136,12 @@ function displayNav(x) {
             tint("#000000");
             fill(255);
         } else {
-            tint(style.icon);
-            fill(style.icon);
+            tint(style.iconColor);
+            fill(style.iconColor);
         }
+
         image(images[i], xPos[i], height * 0.955, size, size);
+        
         if (i === x - 1) {
             fill(0);
             text(names[i], xPos[i] + width * 0.15, height * 0.96);
@@ -197,4 +203,12 @@ function getPoint(ax, ay, cx, cy, z) {
     let x = ax + z * cos(angle);
     let y = ay + z * sin(angle);
     return { x: x, y: y };
+}
+function draw(){
+    background(style.background);
+    if (loading_data){
+        loading();
+    }else{
+        displayNav(1);
+    }
 }
