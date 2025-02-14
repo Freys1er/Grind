@@ -3,7 +3,16 @@ let xPos = [];
 let t = 0;
 let hold = 0;
 
-const iconNames = ['account','cancel','chat','dropdown','event','google','home','notes','people','secret','share','status','stats','tasks','tools','vote'];
+const iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
+
+function mouseHold(){
+    if (mouseIsPressed){
+        hold++;
+    }else{
+        hold = 0;
+    }
+}
+
 
 function loadIcons() {
     return new Promise((resolve, reject) => {
@@ -30,22 +39,27 @@ function loadIcons() {
         }
     });
 }
-    
+
 let style = {};
 let loading_data = true;
 
-function setup() {
+function init() {
     createCanvas(windowWidth, windowHeight);
     style = {
-        background: '#000000',        // Black
-        text: '#D3D3D3',              // Light Gray for primary text
-        accentColor1: '#6B8E23',      // Olive Drab
-        accentColor2: '#4B5320',      // Army Green
-        accentColor3: '#F0E68C',      // Khaki
-        accentColor4: '#2F4F4F',      // Dark Gray
-        iconColor: '#D3D3D3',         // Light Gray for icons
-        navBarColor: '#6B8E23',       // Olive Drab for navigation bar
+        background: '#000000',        // Black (no change)
+        text: '#A9A9A9',              // Darker Light Gray
+        accentColor1: '#1E3A5F',      // Dark Slate Blue (replaces Dark Olive Green)
+        accentColor2: '#2E4057',      // Dark Steel Blue (replaces Darkened Army Green)
+        accentColor3: '#2E4057',      // Dark Steel Blue (replaces Darkened Army Green)
+        accentColor4: '#B0C4DE',      // Light Steel Blue (replaces Dark Khaki)
+        accentColor5: '#1C1C1C',      // Very Dark Gray (no change)
+        iconColor: '#A9A9A9',         // Darker Light Gray for icons (no change)
+        navBarColor: '#1E3A5F',       // Dark Slate Blue (replaces Dark Olive Green for navigation bar)
+        taskFill: '#2B3E50',          // Darker Air Force Blue (no change)
+        taskNew: '#37474F',           // Darker Cadet Grey (no change)
+        taskHover: '#6B7280'          // Darker Lighter Air Force Blue (no change)
     };
+    
     xPos = [
         (width / 30) * 3,
         (width / 30) * 9,
@@ -54,10 +68,16 @@ function setup() {
         (width / 30) * 27,
         width
     ];
-    
+
     loadIcons().then(() => {
         loading_data = false;
-      });
+    });
+
+
+    scroll = {
+        pos: 0,
+        vel: 0
+    };
 }
 
 function displayNav(x) {
@@ -68,7 +88,7 @@ function displayNav(x) {
         icons.notes,
         icons.tools
     ];
-    const names = ["Tasks", "Stats", "Home", "Notes","Tools"];
+    const names = ["Tasks", "Stats", "Home", "Notes", "Tools"];
 
     fill(255);
     textSize(18);
@@ -101,7 +121,7 @@ function displayNav(x) {
         }
     }
 
-    if (hold < 10 && mouseIsPressed && mouseY > height * 0.91) {
+    if (hold > 0 && hold < 10 && mouseIsPressed && mouseY > height * 0.91) {
         window.location.href = "https://freys1er.github.io/Grind/" + names[x - 1];
     }
 
@@ -141,7 +161,7 @@ function displayNav(x) {
         }
 
         image(images[i], xPos[i], height * 0.955, size, size);
-        
+
         if (i === x - 1) {
             fill(0);
             text(names[i], xPos[i] + width * 0.15, height * 0.96);
@@ -204,11 +224,36 @@ function getPoint(ax, ay, cx, cy, z) {
     let y = ay + z * sin(angle);
     return { x: x, y: y };
 }
-function draw(){
-    background(style.background);
-    if (loading_data){
-        loading();
-    }else{
-        displayNav(1);
-    }
+
+function area(x, y, w, h) {
+    return mouseX > x && mouseY > y && mouseX < x + w && mouseY < y + h;
 }
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
+function mouseDragged() {
+    scroll.vel = pmouseY - mouseY;
+}
+
+let scroll = {};
+
+function mouseWheel() {
+    scroll.pos -= event.delta
+}
+
+
+function animate(x, a, b, c, d) {
+    // Ensure p5.js functions are properly referenced
+    let minVal = Math.min(a, b);
+    let maxVal = Math.max(a, b);
+    let constrainedX = constrain(x, minVal, maxVal);
+    let t = map(constrainedX, a, b, 0, 1);
+  
+    // Apply the atan function for a smooth transition
+    let smoothT = (Math.atan((t - 0.5) * 20) / Math.PI) + 0.5;
+  
+    // Map the smoothT value to the desired output range [c, d]
+    return map(smoothT, 0, 1, c, d);
+  }
