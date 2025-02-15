@@ -48,17 +48,25 @@ function init() {
     style = {
         background: '#000000',        // Black (no change)
         text: '#A9A9A9',              // Darker Light Gray
-        accentColor1: '#1E3A5F',      // Dark Slate Blue (replaces Dark Olive Green)
-        accentColor2: '#2E4057',      // Dark Steel Blue (replaces Darkened Army Green)
-        accentColor3: '#2E4057',      // Dark Steel Blue (replaces Darkened Army Green)
-        accentColor4: '#B0C4DE',      // Light Steel Blue (replaces Dark Khaki)
-        accentColor5: '#1C1C1C',      // Very Dark Gray (no change)
-        iconColor: '#A9A9A9',         // Darker Light Gray for icons (no change)
-        navBarColor: '#1E3A5F',       // Dark Slate Blue (replaces Dark Olive Green for navigation bar)
-        taskFill: '#2B3E50',          // Darker Air Force Blue (no change)
-        taskNew: '#37474F',           // Darker Cadet Grey (no change)
-        taskHover: '#6B7280'          // Darker Lighter Air Force Blue (no change)
+        accentColor1: '#1E3A5F',      // Dark Slate Blue
+        accentColor2: '#2E4057',      // Dark Steel Blue
+        accentColor3: '#2E4057',      // Dark Steel Blue
+        accentColor4: '#B0C4DE',      // Light Steel Blue
+        accentColor5: '#1C1C1C',      // Very Dark Gray
+        iconColor: '#A9A9A9',         // Darker Light Gray for icons
+        navBarColor: '#1976D2',       // Education (no change)
+        taskFill: '#2B3E50',          // Darker Air Force Blue
+        taskNew: '#37474F',           // Darker Cadet Grey
+        taskHover: '#6B7280',         // Darker Lighter Air Force Blue
+        setsText: '#D3D3D3',          // Light Gray for sets text
+        setsFill: '#000000',          // Indigo for sets fill
+        setsStroke: '#1976D2',        // Purple for sets stroke
+        exit: '##008BF8',              // Crimson for exit
+        back: '#008BF8',              // Gold for back
+        setsTitle: '#FFFFFF',         // Dark Orange for sets title
+        button: '#AAAAAA'             // Example color for button (Deep Orange)
     };
+
 
     xPos = [
         (width / 30) * 3,
@@ -68,10 +76,6 @@ function init() {
         (width / 30) * 27,
         width
     ];
-
-    loadIcons().then(() => {
-        loading_data = false;
-    });
 
 
     scroll = {
@@ -99,9 +103,9 @@ function safeReplace(newDir) {
     // Add the new directory
     let newUrl = baseURL + '/' + newDir + "/";
 
-    console.log(url,newUrl);
+    console.log(url, newUrl);
 
-    if (url !== newUrl){
+    if (url !== newUrl) {
         window.location.replace(newUrl);
     }
 }
@@ -113,7 +117,7 @@ function displayNav(x) {
         icons.notes,
         icons.tools
     ];
-    const names = ["Tasks", "Stats", "Home", "Notes", "Tools"];
+    const names = ["-", "-", "Home", "-", "-"];
 
     fill(255);
     textSize(18);
@@ -147,7 +151,7 @@ function displayNav(x) {
     }
 
     if (mouseIsPressed && mouseY > height * 0.91) {
-        const urls = ["Military/Tasks", "Military/Stats", "Military", "Military/Notes", "Military/Tools"];
+        const urls = ["Education", "Education", "Education", "Education", "Education"];
         safeReplace(urls[x - 1]);
     }
 
@@ -197,6 +201,7 @@ function displayNav(x) {
     tint("white");
 }
 function loading() {
+    angleMode(RADIANS);
     background(0);
     t++;
     if (t === 100) {
