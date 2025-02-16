@@ -10,6 +10,8 @@ function draw() {
     displayTasks();
     displayNav(5);
   }
+
+  mouseHold();
 }
 
 

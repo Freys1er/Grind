@@ -12,6 +12,8 @@ function draw() {
     displayTasks();
     displayNav(3);
   }
+
+  mouseHold();
 }
 
 

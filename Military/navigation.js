@@ -21,7 +21,7 @@ function loadIcons() {
 
         for (let i = 0; i < iconNames.length; i++) {
             let icon = iconNames[i];
-            loadImage(`../../icons/${icon}.svg`,
+            loadImage(`https://freys1er.github.io/Hive/icons/${icon}.svg`,
                 (img) => {
                     icons[icon] = img;
                     loadedIcons.push(img);
@@ -99,9 +99,9 @@ function safeReplace(newDir) {
     // Add the new directory
     let newUrl = baseURL + '/' + newDir + "/";
 
-    console.log(url,newUrl);
+    console.log(url, newUrl);
 
-    if (url !== newUrl){
+    if (url !== newUrl) {
         window.location.replace(newUrl);
     }
 }
@@ -146,7 +146,7 @@ function displayNav(x) {
         }
     }
 
-    if (mouseIsPressed && mouseY > height * 0.91) {
+    if (hold > 0 && hold < 10 && !mouseIsPressed && mouseY > height * 0.91) {
         const urls = ["Military/Tasks", "Military/Stats", "Military", "Military/Notes", "Military/Tools"];
         safeReplace(urls[x - 1]);
     }

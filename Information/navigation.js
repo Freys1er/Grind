@@ -21,7 +21,7 @@ function loadIcons() {
 
         for (let i = 0; i < iconNames.length; i++) {
             let icon = iconNames[i];
-            loadImage(`../../icons/${icon}.svg`,
+            loadImage(`https://freys1er.github.io/Hive/icons/${icon}.svg`,
                 (img) => {
                     icons[icon] = img;
                     loadedIcons.push(img);
@@ -150,8 +150,8 @@ function displayNav(x) {
         }
     }
 
-    if (mouseIsPressed && mouseY > height * 0.91) {
-        const urls = ["Education", "Education", "Education", "Education", "Education"];
+    if (hold > 0 && hold < 10 && !mouseIsPressed && mouseY > height * 0.91) {
+        const urls = ["Information","Information","Information","Information","Information"];
         safeReplace(urls[x - 1]);
     }
 

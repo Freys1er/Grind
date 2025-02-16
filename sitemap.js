@@ -3,31 +3,58 @@ function setup() {
   colors = [
     '#1E3A5F', // Military
     '#D32F2F', // Democracy
-    '#1976D2', // Education
-    '#388E3C', // Healthcare
+    '#1976D2', // Information
+    '#388E3C', // Administration 
     '#FBC02D', // Economy
-    '#7B1FA2'  // Infrastructure
-  ];
-  colors = [
-    '#1E3A5F', // Military
-    '#D32F2F', // Democracy
-    '#1976D2', // Education
-    '#AAAAAA', // Healthcare
-    '#AAAAAA', // Economy
-    '#AAAAAA'  // Infrastructure
+    '#7B1FA2'  // Social
   ];
 }
 
 let colors = [];
 let branch = [];
-let branches = ["Military", "Democracy", "Education", "Healthcare", "Economy", "Infrastructure"];
+let branches = ["Military", "Democracy", "Information", "Administration", "Economy", "Social"];
 let t = 0;
+let x = 0;
+let hold = 0;
 function draw() {
-  if (t < 38) {
+  if (x < 100) {
+    x++;
+    t = animate(x, 0, 100, -100, 50)
     home();
-    t++;
   } else if (branch.length === 0) {
     home();
+  }
+
+  if (mouseIsPressed) {
+    hold++;
+  } else {
+    hold = 0;
+  }
+}
+function safeReplace(newDir) {
+  // Get the current URL using window.location.href
+  let url = window.location.href;
+
+  // Use URL constructor to parse the URL
+  let parsedURL = new URL(url);
+
+  // Get the base URL (protocol + hostname)
+  let baseURL = parsedURL.protocol + '//' + parsedURL.hostname;
+
+  // Check if the URL ends with '/Hive'
+  let path = parsedURL.pathname;
+  if (path.endsWith('/Hive')) {
+      // Keep only the '/Hive' directory
+      baseURL += '/Hive';
+  }
+
+  // Add the new directory
+  let newUrl = baseURL + '/' + newDir + "/";
+
+  console.log(url, newUrl);
+
+  if (url !== newUrl) {
+      window.location.replace(newUrl);
   }
 }
 function animate(x, a, b, c, d) {
@@ -66,7 +93,7 @@ function home() {
       s = constrain(200 - x, 0, x);
       if (i === 1) {
         if ((7 - d[1]) % 6 === j) {
-          let text_x = x;
+          let text_x = animate(frameCount - frame, 0, 20, x * 0.6, x);
           x += animate(frameCount - frame, 0, 10, 0, 100);
           s += animate(frameCount - frame, 0, 50, 0, 150);
 
@@ -79,8 +106,8 @@ function home() {
             text_x * sin((j * PI) / 3),
             text_x * cos((j * PI) / 3));
 
-          if (mouseIsPressed) {
-            window.location.href = "/" + branches[j];
+          if (hold > 0 && hold < 10 && !mouseIsPressed) {
+            safeReplace(branches[j]);
           }
         } else {
           textAlign(CENTER, CENTER);
@@ -95,6 +122,10 @@ function home() {
             text_x * cos((j * PI) / 3));
         }
         stroke(colors[j]);
+      }
+
+      if (x < 0) {
+        stroke(0);
       }
       strokeWeight(min(200 - x, 0) + 5);
       noFill();
@@ -126,3 +157,8 @@ function getPoint(ax, ay, cx, cy, z) {
   return { x: x, y: y };
 }
 
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') {
+    x = 0;
+  }
+});
