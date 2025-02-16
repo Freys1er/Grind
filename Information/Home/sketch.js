@@ -431,16 +431,13 @@ function flashcards() {
     card.after = file.indexOf(sortedFile[user_memory + 1]);
   }
 
-  text(
-    file[card.after].question,
-    width * 0.1,
-    height / 2 - textHeight(file[card.after].answer, width * 0.8) / 4,
-    width * 0.8
+  customText(
+    file[card.after].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
   );
 
   push();
   translate(card.x + width / 2, 0);
-  scale(card.flip, 1);
+  scale(abs(card.flip), 1);
   translate(-width / 2 - card.x, 0);
 
   translate(card.x, card.y);
@@ -461,10 +458,18 @@ function flashcards() {
 
   fill(0);
   strokeWeight(8);
-  if (ans) {
-    stroke(style.red);
+  if (card.flip > 0) {
+    if (ans) {
+      stroke(style.red);
+    } else {
+      stroke(style.green);
+    }
   } else {
-    stroke(style.green);
+    if (ans) {
+      stroke(style.green);
+    } else {
+      stroke(style.red);
+    }
   }
   rect(width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8, 10);
 
@@ -472,21 +477,26 @@ function flashcards() {
   fill(style.setsTitle);
 
   card.number = file.indexOf(sortedFile[user_memory]);
-
-  if (ans) {
-    text(
-      file[card.number].answer,
-      width * 0.1,
-      height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4,
-      width * 0.8
-    );
+  if (card.flip > 0) {
+    if (ans) {
+      customText(
+        file[card.number].answer,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+      );
+    } else {
+      customText(
+        file[card.number].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+      );
+    }
   } else {
-    text(
-      file[card.number].question,
-      width * 0.1,
-      height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4,
-      width * 0.8
-    );
+    if (!ans) {
+      customText(
+        file[card.number].answer,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+      );
+    } else {
+      customText(
+        file[card.number].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+      );
+    }
   }
   pop();
 
@@ -531,7 +541,7 @@ function flashcards() {
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
     }
   }
-
+  textAlign(CENTER,CENTER)
   fill(255);
   textSize(14);
   text(options.left, width * 0.2, height * 0.92);
@@ -612,22 +622,31 @@ function draw() {
   }
   mouseHold();
 }
-function textHeight(text, maxWidth) {
-  let words = text.split(" ");
-  let line = "";
-  let y = 0;
-  let lineHeight = textAscent() + textDescent();
-
-  for (let i = 0; i < words.length; i++) {
-    let testLine = line + words[i] + " ";
+function customText(t, x, y, w, h) {
+  textAlign(LEFT,TOP)
+  textSize(s * 25);
+  let words = t.split(' ');
+  let line = '';
+  let lines = [];
+  let lineHeight = 25;
+  
+  for (let n = 0; n < words.length; n++) {
+    let testLine = line + words[n] + ' ';
     let testWidth = textWidth(testLine);
-    if (testWidth > maxWidth && i > 0) {
-      line = words[i] + " ";
-      y += lineHeight;
+    if (testWidth > w && n > 0) {
+      lines.push(line);
+      line = words[n] + ' ';
     } else {
       line = testLine;
     }
   }
+  lines.push(line);
 
-  return y + lineHeight;
+  let maxLines = Math.floor(h / lineHeight);
+  let actualHeight = Math.min(lines.length, maxLines) * lineHeight;
+  let yOffset = y + (h - actualHeight) / 2;
+  
+  for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
+    text(lines[i], x + (w - textWidth(lines[i])) / 2, yOffset + i * lineHeight);
+  }
 }
