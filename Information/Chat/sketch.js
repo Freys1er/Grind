@@ -78,22 +78,15 @@ function windowResized() {
 
 function loadData() {
   return new Promise((resolve, reject) => {
-    let url =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOMxqxDvZYRq4eCecjgaq49t28A5go4QuLUbf4meYu_ggtZvdpD3j2mr8gcRStObQO5gzkSOPjRPiI/pub?gid=1737979596&single=true&output=csv";
-    let table = loadTable(
-      url,
-      "header",
-      "csv",
-      () => {
-        data = table.getArray(); // Set data to .getArray
-        console.log("Data loaded");
-        resolve();
-      },
-      (err) => {
-        console.error("Error loading data:", err);
-        reject(err);
-      }
-    );
+    let url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSOMxqxDvZYRq4eCecjgaq49t28A5go4QuLUbf4meYu_ggtZvdpD3j2mr8gcRStObQO5gzkSOPjRPiI/pub?gid=1737979596&single=true&output=csv";
+    let table = loadTable(url, "header", "csv", () => {
+      data = table.getArray();  // Set data to .getArray
+      console.log('Data loaded');
+      resolve();
+    }, (err) => {
+      console.error('Error loading data:', err);
+      reject(err);
+    });
   });
 }
 
@@ -112,19 +105,16 @@ function setup() {
 
   init();
 
-  loadIcons()
-    .then(() => {
-      return loadData();
-    })
-    .then(() => {
-      loading_data = false;
-      console.log("Icons and data loaded");
-    })
-    .catch((err) => {
-      console.error("Error:", err);
-    });
+  loadIcons().then(() => {
+    return loadData();
+  }).then(() => {
+    loading_data = false;
+    console.log('Icons and data loaded');
+  }).catch((err) => {
+    console.error('Error:', err);
+  });
 
-  textFont("sans-serif");
+  textFont("sans-serif")
 }
 //FUNCTIONS
 function todate(x) {
@@ -229,7 +219,12 @@ function shownotes(x) {
     rect(width / 30, (height / 10) * 9, width - width / 15, height / 12, 10);
     if (notes.progress * 2 < x.length) {
       fill(style.background);
-      text(notes.name, width / 30, (height / 10) * 9.4, width - width / 15);
+      text(
+        notes.name,
+        width / 30,
+        (height / 10) * 9.4,
+        width - width / 15
+      );
       textStyle(NORMAL);
       if (
         button(
@@ -343,7 +338,7 @@ function flow() {
     );
 
     noStroke();
-    textSize(min(s * 50, (width / sets[i][2].length) * 1.5));
+    textSize(min(s * 50, (width / sets[i][2].length) * 2));
     fill(style.setsText);
     text(sets[i][2], width / 2, i * height * 0.22 + scroll.pos + height / 40);
 
@@ -385,7 +380,6 @@ function flow() {
       choosen = sets[i][2];
 
       if (stage !== "NOTES") {
-        stage = "FLASHCARDS";
         file = file.split("#");
         done = [];
         for (let i = 0; i < file.length; i += 2) {
@@ -405,7 +399,6 @@ function flow() {
 let timer_start = 0;
 let card_number = 0;
 function flashcards() {
-  print(0);
   fill(style.background);
   rect(0, 0, width, height);
 
@@ -420,12 +413,7 @@ function flashcards() {
   let card_number = file.indexOf(sortedFile[user_memory]);
 
   if (ans) {
-    text(
-      file[card_number].question + "\n\n\n" + file[card_number].answer,
-      shift * 3,
-      height / 2,
-      width
-    );
+    text(file[card_number].question + "\n\n\n" + file[card_number].answer, shift * 3, height / 2, width);
   } else {
     text(file[card_number].question, shift * 3, height / 2, width);
   }
@@ -479,7 +467,7 @@ function draw() {
   if (loading_data) {
     loading();
     type.hide();
-  } else if (stage === "LOADING") {
+  } else if (stage === 'LOADING') {
     //DATA WRANGLING - FLAHSCARDS
     for (let i = 0; i < data.length; i++) {
       total += data[i][3].split("#").length;
