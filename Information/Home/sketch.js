@@ -135,7 +135,7 @@ function setup() {
 
   options = {
     left: "KNOWN",
-    right: "REVEAL"
+    right: "REVEAL",
   };
 }
 //FUNCTIONS
@@ -396,12 +396,14 @@ function flow() {
           });
         }
         file = done;
+        sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
         print(file);
       }
       saverecent(choosen);
     }
   }
 }
+let sortedFile;
 let timer_start = 0;
 let card;
 let options;
@@ -416,26 +418,40 @@ function flashcards() {
   text(choosen, width / 2, height / 40);
   textSize(s * 25);
 
+  fill(0);
+  strokeWeight(8);
+  stroke(style.green);
+  rect(width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8, 10);
+  noStroke();
+  fill(255);
+
+  if (card.shift > 0) {
+    card.after = file.indexOf(sortedFile[user_memory - 1]);
+  } else {
+    card.after = file.indexOf(sortedFile[user_memory + 1]);
+  }
+
+  text(
+    file[card.after].question,
+    width * 0.1,
+    height / 2 - textHeight(file[card.after].answer, width * 0.8) / 4,
+    width * 0.8
+  );
+
   push();
-  translate(width / 2, 0);
+  translate(card.x + width / 2, 0);
   scale(card.flip, 1);
-  translate(-width / 2, 0);
+  translate(-width / 2 - card.x, 0);
 
   translate(card.x, card.y);
 
   if (mouseIsPressed) {
-    if (mouseX - pmouseX > 0) {
-      if (!ans) {
-        angleMode(RADIANS);
-        card.flip = sin(map(card.shift, 0, width / 2, PI / 2, 0));
-        card.x = 0;
-      } else {
-        card.x = card.shift * 3;
-        card.flip = 1;
-      }
+    if (!ans) {
+      angleMode(RADIANS);
+      card.flip = sin(map(card.shift, 0, width / 2, PI / 2, 0));
+      card.x = min(card.shift * 2, 0);
     } else {
-      card.x = card.shift * 3;
-      card.flip = 1;
+      card.x = card.shift * 2;
     }
   } else {
     card.x = 0;
@@ -455,13 +471,22 @@ function flashcards() {
   noStroke();
   fill(style.setsTitle);
 
-  let sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
   card.number = file.indexOf(sortedFile[user_memory]);
 
   if (ans) {
-    text(file[card.number].answer, width * 0.1, height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4, width * 0.8);
+    text(
+      file[card.number].answer,
+      width * 0.1,
+      height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4,
+      width * 0.8
+    );
   } else {
-    text(file[card.number].question, width * 0.1, height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4, width * 0.8);
+    text(
+      file[card.number].question,
+      width * 0.1,
+      height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4,
+      width * 0.8
+    );
   }
   pop();
 
@@ -475,17 +500,16 @@ function flashcards() {
   if (!mouseIsPressed) {
     wait = false;
     //YES
-    if (card.shift * 3 < -width / 2) {
+    if (card.shift * 2 < -width / 2) {
       print("The user knew: " + file[card.number].question);
       file[card.number].rating += 1 / (millis() - timer_start);
       wait = true;
       ans = false;
 
-
       options.left = "KNOWN";
     }
     //NO
-    if (card.shift * 3 > width / 2) {
+    if (card.shift * 2 > width / 2) {
       if (!ans) {
         print("The user saw the answer to: " + file[card.number].question);
         wait = true;
@@ -502,11 +526,11 @@ function flashcards() {
       }
     }
 
-    if (card.shift * 3 > width / 2 || card.shift * 3 < -width / 2) {
+    if (card.shift * 2 > width / 2 || card.shift * 2 < -width / 2) {
       timer_start = millis();
+      sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
     }
   }
-
 
   fill(255);
   textSize(14);
@@ -589,16 +613,16 @@ function draw() {
   mouseHold();
 }
 function textHeight(text, maxWidth) {
-  let words = text.split(' ');
-  let line = '';
+  let words = text.split(" ");
+  let line = "";
   let y = 0;
   let lineHeight = textAscent() + textDescent();
 
   for (let i = 0; i < words.length; i++) {
-    let testLine = line + words[i] + ' ';
+    let testLine = line + words[i] + " ";
     let testWidth = textWidth(testLine);
     if (testWidth > maxWidth && i > 0) {
-      line = words[i] + ' ';
+      line = words[i] + " ";
       y += lineHeight;
     } else {
       line = testLine;
