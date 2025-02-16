@@ -41,11 +41,12 @@ function safeReplace(newDir) {
   // Get the base URL (protocol + hostname)
   let baseURL = parsedURL.protocol + '//' + parsedURL.hostname;
 
-  // Check if the URL ends with '/Hive'
+  // Check if the URL contains '/Hive' and ends with or after '/Hive'
   let path = parsedURL.pathname;
-  if (path.endsWith('/Hive')) {
-      // Keep only the '/Hive' directory
-      baseURL += '/Hive';
+  if (path.includes('/Hive')) {
+      // Keep the path up to and including '/Hive'
+      let hiveIndex = path.indexOf('/Hive') + '/Hive'.length;
+      baseURL += path.slice(0, hiveIndex);
   }
 
   // Add the new directory
@@ -57,6 +58,7 @@ function safeReplace(newDir) {
       window.location.replace(newUrl);
   }
 }
+
 function animate(x, a, b, c, d) {
   // Ensure p5.js functions are properly referenced
   let minVal = Math.min(a, b);

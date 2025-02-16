@@ -82,29 +82,30 @@ function init() {
 function safeReplace(newDir) {
     // Get the current URL using window.location.href
     let url = window.location.href;
-
+  
     // Use URL constructor to parse the URL
     let parsedURL = new URL(url);
-
+  
     // Get the base URL (protocol + hostname)
     let baseURL = parsedURL.protocol + '//' + parsedURL.hostname;
-
-    // Check if the URL ends with '/Hive'
+  
+    // Check if the URL contains '/Hive' and ends with or after '/Hive'
     let path = parsedURL.pathname;
-    if (path.endsWith('/Hive')) {
-        // Keep only the '/Hive' directory
-        baseURL += '/Hive';
+    if (path.includes('/Hive')) {
+        // Keep the path up to and including '/Hive'
+        let hiveIndex = path.indexOf('/Hive') + '/Hive'.length;
+        baseURL += path.slice(0, hiveIndex);
     }
-
+  
     // Add the new directory
     let newUrl = baseURL + '/' + newDir + "/";
-
+  
     console.log(url, newUrl);
-
+  
     if (url !== newUrl) {
         window.location.replace(newUrl);
     }
-}
+  }
 function displayNav(x) {
     const images = [
         icons.tasks,
