@@ -3,7 +3,7 @@ let xPos = [];
 let t = 0;
 let hold = 0;
 
-const iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
+const iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote', 'swipe'];
 
 function mouseHold() {
     if (mouseIsPressed) {
@@ -64,7 +64,9 @@ function init() {
         exit: '##008BF8',              // Crimson for exit
         back: '#008BF8',              // Gold for back
         setsTitle: '#FFFFFF',         // Dark Orange for sets title
-        button: '#AAAAAA'             // Example color for button (Deep Orange)
+        button: '#AAAAAA',             // Example color for button (Deep Orange)
+        green: '#1eb955',
+        red: '#f53e27'
     };
 
 
@@ -107,7 +109,7 @@ function safeReplace(newDir) {
     console.log(url, newUrl);
   
     if (url !== newUrl) {
-        window.location.replace(newUrl);
+        window.location.href = (newUrl);
     }
   }
 function displayNav(x) {

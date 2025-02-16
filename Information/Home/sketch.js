@@ -20,7 +20,6 @@ let h = {
   recent: [],
 };
 let file;
-let shift = 0;
 let index = 0;
 let wait = false;
 let ans = false;
@@ -125,6 +124,19 @@ function setup() {
     });
 
   textFont("sans-serif");
+
+  card = {
+    number: 0,
+    shift: 0,
+    y: 0,
+    flip: 0,
+    x: 0,
+  };
+
+  options = {
+    left: "KNOWN",
+    right: "REVEAL"
+  };
 }
 //FUNCTIONS
 function todate(x) {
@@ -251,18 +263,6 @@ function shownotes(x) {
         }
       }
     }
-  }
-
-  fill(style.back);
-  noStroke();
-  text("◄", s * 20, s * 20);
-  if (hold === 1 && button(0, 0, s * 40, s * 40)) {
-    notes.next = false;
-    notes.progress = 1;
-    stage = "FLOW";
-    choosen = "";
-    wait = true;
-    scroll.pos = height / 3;
   }
 }
 
@@ -403,9 +403,9 @@ function flow() {
   }
 }
 let timer_start = 0;
-let card_number = 0;
+let card;
+let options;
 function flashcards() {
-  print(0);
   fill(style.background);
   rect(0, 0, width, height);
 
@@ -413,64 +413,122 @@ function flashcards() {
   textSize(s * 20);
   fill(style.setsTitle);
   noStroke();
-  text(choosen.name, width / 2, height / 40);
+  text(choosen, width / 2, height / 40);
   textSize(s * 25);
 
-  let sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
-  let card_number = file.indexOf(sortedFile[user_memory]);
+  push();
+  translate(width / 2, 0);
+  scale(card.flip, 1);
+  translate(-width / 2, 0);
 
-  if (ans) {
-    text(
-      file[card_number].question + "\n\n\n" + file[card_number].answer,
-      shift * 3,
-      height / 2,
-      width
-    );
+  translate(card.x, card.y);
+
+  if (mouseIsPressed) {
+    if (mouseX - pmouseX > 0) {
+      if (!ans) {
+        angleMode(RADIANS);
+        card.flip = sin(map(card.shift, 0, width / 2, PI / 2, 0));
+        card.x = 0;
+      } else {
+        card.x = card.shift * 3;
+        card.flip = 1;
+      }
+    } else {
+      card.x = card.shift * 3;
+      card.flip = 1;
+    }
   } else {
-    text(file[card_number].question, shift * 3, height / 2, width);
+    card.x = 0;
+    card.y = 0;
+    card.flip = 1;
   }
 
-  if (hold > 0 && !wait) {
-    shift += mouseX - pmouseX;
+  fill(0);
+  strokeWeight(8);
+  if (ans) {
+    stroke(style.red);
   } else {
-    shift = 0;
+    stroke(style.green);
+  }
+  rect(width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8, 10);
+
+  noStroke();
+  fill(style.setsTitle);
+
+  let sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
+  card.number = file.indexOf(sortedFile[user_memory]);
+
+  if (ans) {
+    text(file[card.number].answer, width * 0.1, height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4, width * 0.8);
+  } else {
+    text(file[card.number].question, width * 0.1, height / 2 - textHeight(file[card.number].answer, width * 0.8) / 4, width * 0.8);
+  }
+  pop();
+
+  if (hold > 0 && !wait) {
+    card.shift += mouseX - pmouseX;
+    card.y += mouseY - pmouseY;
+  } else {
+    card.shift = 0;
+    card.y = 0;
   }
   if (!mouseIsPressed) {
     wait = false;
     //YES
-    if (shift * 3 < -width / 4) {
-      print("The user knew: " + file[card_number].question);
-      file[card_number].rating += 1 / (millis() - timer_start);
+    if (card.shift * 3 < -width / 2) {
+      print("The user knew: " + file[card.number].question);
+      file[card.number].rating += 1 / (millis() - timer_start);
       wait = true;
       ans = false;
+
+
+      options.left = "KNOWN";
     }
     //NO
-    if (shift * 3 > width / 4) {
+    if (card.shift * 3 > width / 2) {
       if (!ans) {
-        print("The user saw the answer to: " + file[card_number].question);
+        print("The user saw the answer to: " + file[card.number].question);
         wait = true;
         ans = true;
+
+        options.right = "FORGOT";
       } else {
-        print("The user did'nt know: " + file[card_number].question);
-        file[card_number].rating -= 1 / (millis() - timer_start);
+        print("The user did'nt know: " + file[card.number].question);
+        file[card.number].rating -= 1 / (millis() - timer_start);
         wait = true;
         ans = false;
+
+        options.right = "REVEAL";
       }
     }
 
-    if (shift * 3 > width / 4 || shift * 3 < -width / 4) {
+    if (card.shift * 3 > width / 2 || card.shift * 3 < -width / 2) {
       timer_start = millis();
     }
   }
 
-  textAlign(LEFT, TOP);
-  fill(style.exit);
-  noStroke();
-  rect(width / 80, height / 4, height / 120, height / 2, 20);
-  if (mouseIsPressed && mouseX < width / 20) {
-    stage = "EXIT-FLOW";
-    wait = true;
-  }
+
+  fill(255);
+  textSize(14);
+  text(options.left, width * 0.2, height * 0.92);
+  text(options.right, width * 0.8, height * 0.92);
+
+  push();
+  translate(width * 0.8, height * 0.9);
+  rotate(PI / 2);
+  translate(-width * 0.05, -width * 0.05);
+
+  image(icons.swipe, 0, 0, width * 0.1, width * 0.1);
+  pop();
+
+  push();
+  translate(width * 0.2, height * 0.9);
+  rotate(PI / 2);
+  scale(1, -1);
+  translate(-width * 0.05, -width * 0.05);
+
+  image(icons.swipe, 0, 0, width * 0.1, width * 0.1);
+  pop();
 }
 
 //INTERFACE
@@ -496,26 +554,56 @@ function draw() {
   if (stage === "FLASHCARDS") {
     flashcards();
     type.hide();
+    imageMode(CORNER);
+    image(icons.home, width * 0.02, width * 0.02, width * 0.08, width * 0.08);
+
+    if (
+      area(0, 0, width / 10, width / 10) &&
+      !mouseIsPressed &&
+      hold < 10 &&
+      hold > 0
+    ) {
+      stage = "FLOW";
+    }
   }
   if (stage === "NOTES") {
     shownotes(file);
     type.hide();
-  }
+    imageMode(CORNER);
+    image(icons.home, width * 0.02, width * 0.02, width * 0.08, width * 0.08);
 
-  if (stage === "EXIT-FLOW") {
-    type.hide();
-    flow();
-    push();
-    translate(mouseX, 0);
-    flashcards();
-    pop();
-    if (hold === 0) {
-      if (mouseX < width / 2) {
-        stage = "FLASHCARDS";
-      } else {
-        stage = "FLOW";
-      }
+    if (
+      area(0, 0, width / 10, width / 10) &&
+      !mouseIsPressed &&
+      hold < 10 &&
+      hold > 0
+    ) {
+      notes.next = false;
+      notes.progress = 1;
+      stage = "FLOW";
+      choosen = "";
+      wait = true;
+      scroll.pos = height / 3;
     }
   }
   mouseHold();
+}
+function textHeight(text, maxWidth) {
+  let words = text.split(' ');
+  let line = '';
+  let y = 0;
+  let lineHeight = textAscent() + textDescent();
+
+  for (let i = 0; i < words.length; i++) {
+    let testLine = line + words[i] + ' ';
+    let testWidth = textWidth(testLine);
+    if (testWidth > maxWidth && i > 0) {
+      line = words[i] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+
+  return y + lineHeight;
 }

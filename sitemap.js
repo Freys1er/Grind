@@ -55,7 +55,7 @@ function safeReplace(newDir) {
   console.log(url, newUrl);
 
   if (url !== newUrl) {
-      window.location.replace(newUrl);
+      window.location.href = newUrl;
   }
 }
 
