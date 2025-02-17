@@ -131,6 +131,7 @@ function setup() {
     y: 0,
     flip: 0,
     x: 0,
+    down: 0,
   };
 
   options = {
@@ -421,7 +422,13 @@ function flashcards() {
   fill(0);
   strokeWeight(8);
   stroke(style.green);
-  rect(width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8, 10);
+  rect(
+    width / 2 - fixed * 0.4,
+    (height - fixed * 0.8) / 2,
+    fixed * 0.8,
+    fixed * 0.8,
+    10
+  );
   noStroke();
   fill(255);
 
@@ -432,7 +439,11 @@ function flashcards() {
   }
 
   customText(
-    file[card.after].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+    file[card.after].question,
+    width / 2 - fixed * 0.4,
+    (height - fixed * 0.8) / 2,
+    fixed * 0.8,
+    fixed * 0.8
   );
 
   push();
@@ -443,12 +454,19 @@ function flashcards() {
   translate(card.x, card.y);
 
   if (mouseIsPressed) {
+    if (hold === 0) {
+      card.down = mouseX;
+    }
     if (!ans) {
       angleMode(RADIANS);
-      card.flip = sin(map(card.shift, 0, width / 2, PI / 2, 0));
+      card.flip = sin(map(mouseX, card.down, width, PI / 2, -PI / 2));
+      if (mouseX<card.down){
+        card.flip = 1;
+      }
       card.x = min(card.shift * 2, 0);
     } else {
       card.x = card.shift * 2;
+      card.flip = 1;
     }
   } else {
     card.x = 0;
@@ -458,6 +476,7 @@ function flashcards() {
 
   fill(0);
   strokeWeight(8);
+  
   if (card.flip > 0) {
     if (ans) {
       stroke(style.red);
@@ -471,7 +490,14 @@ function flashcards() {
       stroke(style.red);
     }
   }
-  rect(width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8, 10);
+
+  rect(
+    width / 2 - fixed * 0.4,
+    (height - fixed * 0.8) / 2,
+    fixed * 0.8,
+    fixed * 0.8,
+    10
+  );
 
   noStroke();
   fill(style.setsTitle);
@@ -480,21 +506,37 @@ function flashcards() {
   if (card.flip > 0) {
     if (ans) {
       customText(
-        file[card.number].answer,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+        file[card.number].answer,
+        width / 2 - fixed * 0.4,
+        (height - fixed * 0.8) / 2,
+        fixed * 0.8,
+        fixed * 0.8
       );
     } else {
       customText(
-        file[card.number].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+        file[card.number].question,
+        width / 2 - fixed * 0.4,
+        (height - fixed * 0.8) / 2,
+        fixed * 0.8,
+        fixed * 0.8
       );
     }
   } else {
     if (!ans) {
       customText(
-        file[card.number].answer,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+        file[card.number].answer,
+        width / 2 - fixed * 0.4,
+        (height - fixed * 0.8) / 2,
+        fixed * 0.8,
+        fixed * 0.8
       );
     } else {
       customText(
-        file[card.number].question,width * 0.1, (height - width * 0.8) / 2, width * 0.8, width * 0.8
+        file[card.number].question,
+        width / 2 - fixed * 0.4,
+        (height - fixed * 0.8) / 2,
+        fixed * 0.8,
+        fixed * 0.8
       );
     }
   }
@@ -541,7 +583,7 @@ function flashcards() {
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
     }
   }
-  textAlign(CENTER,CENTER)
+  textAlign(CENTER, CENTER);
   fill(255);
   textSize(14);
   text(options.left, width * 0.2, height * 0.92);
@@ -552,7 +594,7 @@ function flashcards() {
   rotate(PI / 2);
   translate(-width * 0.05, -width * 0.05);
 
-  image(icons.swipe, 0, 0, width * 0.1, width * 0.1);
+  image(icons.swipe, 0, 0, fixed * 0.1, fixed * 0.1);
   pop();
 
   push();
@@ -561,12 +603,13 @@ function flashcards() {
   scale(1, -1);
   translate(-width * 0.05, -width * 0.05);
 
-  image(icons.swipe, 0, 0, width * 0.1, width * 0.1);
+  image(icons.swipe, 0, 0, fixed * 0.1, fixed * 0.1);
   pop();
 }
-
+let fixed;
 //INTERFACE
 function draw() {
+  fixed = min(width, height);
   textStyle(BOLD);
   if (loading_data) {
     loading();
@@ -589,7 +632,7 @@ function draw() {
     flashcards();
     type.hide();
     imageMode(CORNER);
-    image(icons.home, width * 0.02, width * 0.02, width * 0.08, width * 0.08);
+    image(icons.home, fixed * 0.02, fixed * 0.02, fixed * 0.08, fixed * 0.08);
 
     if (
       area(0, 0, width / 10, width / 10) &&
@@ -604,7 +647,7 @@ function draw() {
     shownotes(file);
     type.hide();
     imageMode(CORNER);
-    image(icons.home, width * 0.02, width * 0.02, width * 0.08, width * 0.08);
+    image(icons.home, fixed * 0.02, fixed * 0.02, fixed * 0.08, fixed * 0.08);
 
     if (
       area(0, 0, width / 10, width / 10) &&
@@ -623,19 +666,19 @@ function draw() {
   mouseHold();
 }
 function customText(t, x, y, w, h) {
-  textAlign(LEFT,TOP)
+  textAlign(LEFT, TOP);
   textSize(s * 25);
-  let words = t.split(' ');
-  let line = '';
+  let words = t.split(" ");
+  let line = "";
   let lines = [];
   let lineHeight = 25;
-  
+
   for (let n = 0; n < words.length; n++) {
-    let testLine = line + words[n] + ' ';
+    let testLine = line + words[n] + " ";
     let testWidth = textWidth(testLine);
     if (testWidth > w && n > 0) {
       lines.push(line);
-      line = words[n] + ' ';
+      line = words[n] + " ";
     } else {
       line = testLine;
     }
@@ -645,7 +688,7 @@ function customText(t, x, y, w, h) {
   let maxLines = Math.floor(h / lineHeight);
   let actualHeight = Math.min(lines.length, maxLines) * lineHeight;
   let yOffset = y + (h - actualHeight) / 2;
-  
+
   for (let i = 0; i < Math.min(lines.length, maxLines); i++) {
     text(lines[i], x + (w - textWidth(lines[i])) / 2, yOffset + i * lineHeight);
   }
