@@ -132,6 +132,7 @@ function setup() {
     flip: 0,
     x: 0,
     down: 0,
+    start: 0
   };
 
   options = {
@@ -406,6 +407,7 @@ function flow() {
 }
 let sortedFile;
 let timer_start = 0;
+let timer_flip = 0;
 let card;
 let options;
 function flashcards() {
@@ -452,27 +454,6 @@ function flashcards() {
   translate(-width / 2 - card.x, 0);
 
   translate(card.x, card.y);
-
-  if (mouseIsPressed) {
-    if (hold === 0) {
-      card.down = mouseX;
-    }
-    if (!ans) {
-      angleMode(RADIANS);
-      card.flip = sin(map(mouseX, card.down, width, PI / 2, -PI / 2));
-      if (mouseX < card.down) {
-        card.flip = 1;
-      }
-      card.x = min(card.shift * 2, 0);
-    } else {
-      card.x = card.shift * 2;
-      card.flip = 1;
-    }
-  } else {
-    card.x = 0;
-    card.y = 0;
-    card.flip = 1;
-  }
 
   fill(0);
   strokeWeight(8);
@@ -560,17 +541,16 @@ function flashcards() {
 
       options.left = "KNOWN";
     }
-    //FORGOT
     if (card.shift * 2 > width / 2 && ans) {
+      //FORGOT
       print("The user did'nt know: " + file[card.number].question);
       file[card.number].rating -= 1 / (millis() - timer_start);
       wait = true;
       ans = false;
 
       options.right = "REVEAL";
-    }
-    //REVEAL
-    if (card.shift * 2 > width / 2 && !ans) {
+    } else if (card.flip < 0 && !ans) {
+      //REVEAL
       print("The user saw the answer to: " + file[card.number].question);
       wait = true;
       ans = true;
@@ -580,6 +560,34 @@ function flashcards() {
     if (card.shift * 2 > width / 2 || card.shift * 2 < -width / 2) {
       timer_start = millis();
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
+    }
+
+    card.x = 0;
+    card.y = 0;
+    if (ans) {
+      card.flip = animate(timer_flip, 0, 20, -card.start, 1.02);
+    } else {
+      card.flip = animate(timer_flip, 0, 20, card.start, 1.02);
+    }
+    if (timer_flip < 20) {
+      timer_flip++;
+    }
+  } else {
+    timer_flip = 0;
+    card.start = card.flip;
+    if (hold === 0) {
+      card.down = mouseX;
+    }
+    if (!ans) {
+      angleMode(RADIANS);
+      card.flip = sin(map(mouseX, card.down, width, PI / 2, -PI / 2));
+      if (mouseX < card.down) {
+        card.flip = 1;
+      }
+      card.x = min(card.shift * 2, 0);
+    } else {
+      card.x = card.shift * 2;
+      card.flip = 1;
     }
   }
   textAlign(CENTER, CENTER);
