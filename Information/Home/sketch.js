@@ -132,7 +132,9 @@ function setup() {
     flip: 0,
     x: 0,
     down: 0,
-    start: 0
+    start: 0,
+    px: 0,
+    py: 0
   };
 
   options = {
@@ -408,6 +410,7 @@ function flow() {
 let sortedFile;
 let timer_start = 0;
 let timer_flip = 0;
+let timer_pos = 0;
 let card;
 let options;
 function flashcards() {
@@ -528,7 +531,6 @@ function flashcards() {
     card.y += mouseY - pmouseY;
   } else {
     card.shift = 0;
-    card.y = 0;
   }
   if (!mouseIsPressed) {
     wait = false;
@@ -562,23 +564,31 @@ function flashcards() {
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
     }
 
-    card.x = 0;
-    card.y = 0;
     if (ans) {
       card.flip = animate(timer_flip, 0, 20, -card.start, 1);
     } else {
       card.flip = animate(timer_flip, 0, 20, card.start, 1);
     }
+
+    card.x = animate(timer_pos, 0, 20, card.px, 0);
+    card.y = animate(timer_pos, 0, 20, card.py, 0);
+
+    if (timer_pos < 20) { 
+      timer_pos++;
+    }
     if (timer_flip < 20) {
       timer_flip++;
-    }else{
+    } else {
       card.flip = 1;
     }
   } else {
-    if (!ans){
+    if (!ans) {
       timer_flip = 0;
     }
+    timer_pos = 0;
     card.start = card.flip;
+    card.px = card.x;
+    card.py = card.y;
     if (hold === 0) {
       card.down = mouseX;
     }
