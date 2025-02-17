@@ -565,15 +565,19 @@ function flashcards() {
     card.x = 0;
     card.y = 0;
     if (ans) {
-      card.flip = animate(timer_flip, 0, 20, -card.start, 1.02);
+      card.flip = animate(timer_flip, 0, 20, -card.start, 1);
     } else {
-      card.flip = animate(timer_flip, 0, 20, card.start, 1.02);
+      card.flip = animate(timer_flip, 0, 20, card.start, 1);
     }
     if (timer_flip < 20) {
       timer_flip++;
+    }else{
+      card.flip = 1;
     }
   } else {
-    timer_flip = 0;
+    if (!ans){
+      timer_flip = 0;
+    }
     card.start = card.flip;
     if (hold === 0) {
       card.down = mouseX;
