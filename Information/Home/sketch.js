@@ -460,7 +460,7 @@ function flashcards() {
     if (!ans) {
       angleMode(RADIANS);
       card.flip = sin(map(mouseX, card.down, width, PI / 2, -PI / 2));
-      if (mouseX<card.down){
+      if (mouseX < card.down) {
         card.flip = 1;
       }
       card.x = min(card.shift * 2, 0);
@@ -476,7 +476,7 @@ function flashcards() {
 
   fill(0);
   strokeWeight(8);
-  
+
   if (card.flip > 0) {
     if (ans) {
       stroke(style.red);
@@ -551,7 +551,7 @@ function flashcards() {
   }
   if (!mouseIsPressed) {
     wait = false;
-    //YES
+    //KNOWN
     if (card.shift * 2 < -width / 2) {
       print("The user knew: " + file[card.number].question);
       file[card.number].rating += 1 / (millis() - timer_start);
@@ -560,24 +560,23 @@ function flashcards() {
 
       options.left = "KNOWN";
     }
-    //NO
-    if (card.shift * 2 > width / 2) {
-      if (!ans) {
-        print("The user saw the answer to: " + file[card.number].question);
-        wait = true;
-        ans = true;
+    //FORGOT
+    if (card.shift * 2 > width / 2 && ans) {
+      print("The user did'nt know: " + file[card.number].question);
+      file[card.number].rating -= 1 / (millis() - timer_start);
+      wait = true;
+      ans = false;
 
-        options.right = "FORGOT";
-      } else {
-        print("The user did'nt know: " + file[card.number].question);
-        file[card.number].rating -= 1 / (millis() - timer_start);
-        wait = true;
-        ans = false;
-
-        options.right = "REVEAL";
-      }
+      options.right = "REVEAL";
     }
+    //REVEAL
+    if (card.shift * 2 > width / 2 && !ans) {
+      print("The user saw the answer to: " + file[card.number].question);
+      wait = true;
+      ans = true;
 
+      options.right = "FORGOT";
+    }
     if (card.shift * 2 > width / 2 || card.shift * 2 < -width / 2) {
       timer_start = millis();
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
