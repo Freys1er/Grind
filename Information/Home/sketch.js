@@ -377,6 +377,7 @@ function flow() {
       hold < 10 &&
       hold > 0 &&
       abs(pmouseX - mouseX) >= abs(pmouseY - mouseY) &&
+      abs(scroll.vel) < 1 &&
       !mouseIsPressed &&
       button(
         width / 80,
