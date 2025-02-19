@@ -321,7 +321,7 @@ function flow() {
   text(
     type.value(),
     width / 80,
-    -height * 0.1 + scroll.pos,
+    -height * 0.075 + scroll.pos,
     width - width / 40
   );
   if (type.value().length <= 1) {
@@ -334,7 +334,9 @@ function flow() {
   }
   noStroke();
 
-  for (let i = 0; i < sets.length; i++) {
+  let iStart = max(0, floor((-scroll.pos - height / 40) / (height * 0.22)));
+
+  for (let i = iStart; i < sets.length; i++) {
     fill(style.setsFill);
     stroke(style.setsStroke);
 
@@ -559,9 +561,12 @@ function flashcards() {
 
       options.right = "FORGOT";
     }
-    if (card.shift * 2 > width / 2 || card.shift * 2 < -width / 2) {
+    if (card.shift * 2 > width / 2 || card.shift * 2 < -width / 2 || card.flip < 0 && !ans) {
       timer_start = millis();
       sortedFile = file.sort((obj1, obj2) => obj1.rating - obj2.rating);
+
+      card.px = 0;
+      card.py = 0;
     }
 
     if (ans) {

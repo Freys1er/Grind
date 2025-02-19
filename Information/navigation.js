@@ -44,7 +44,7 @@ let style = {};
 let loading_data = true;
 
 function init() {
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth/1, windowHeight/1);
     style = {
         background: '#000000',        // Black (no change)
         text: '#A9A9A9',              // Darker Light Gray
