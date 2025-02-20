@@ -3,9 +3,9 @@ function setup() {
 
   for (let i = 0; i < 10; i++) {
     tasks.push({
-      name: "Test Task "+i,
-      streak: random(0,10),
-      last: 1000
+      name: "Test Task " + i,
+      created: epoch() - random(0, 1000000),
+      last: epoch() - random(86400-5000, 86400)
     });
   }
 }
@@ -32,7 +32,7 @@ function draw() {
 }
 
 
-function updateTasks(){
+function updateTasks() {
   tasks.sort((a, b) => a.last - b.last);
 }
 
@@ -52,7 +52,20 @@ function displayTasks() {
     push();
     translate(0, scroll.pos + i * height * 0.07 + height * 0.1);
 
-    let streak = floor(tasks[i].streak);
+    let streak = floor(tasks[i].last / 86400) - floor(tasks[i].created / 86400);
+    if (streak < 0) {
+      streak = 0;
+    }
+
+    let time_left = floor((tasks[i].last + 86400) - epoch());
+
+    if (time_left < 3600) {
+      fill(style.warning);
+      textAlign(RIGHT,CENTER);
+      textSize(18);
+      text(time_left, width * 0.95, height * 0.04);
+      image(icons.fire, width * 0.95 - height * 0.04, height * 0.01, height * 0.04, height * 0.04);
+    }
 
     if (streak > 0) {
       fill(style.taskFill);
@@ -77,7 +90,7 @@ function displayTasks() {
 
     strokeWeight(1);
     stroke(style.taskHover);
-    line(width * 0.13, height*0.07, width, height*0.07, 20);
+    line(width * 0.13, height * 0.07, width, height * 0.07, 20);
 
     fill(style.text);
     textSize(18);
@@ -90,9 +103,8 @@ function displayTasks() {
     pop();
 
     if (area(width * 0.06, scroll.pos + i * height * 0.07 + height * 0.1, width * 0.88, height * 0.07)) {
-      if (hold === 1){
+      if (hold === 1) {
         tasks[i].last = epoch();
-        tasks[i].streak ++;
         updateTasks();
       }
     }

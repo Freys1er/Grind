@@ -3,7 +3,7 @@ let xPos = [];
 let t = 0;
 let hold = 0;
 
-const iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
+const iconNames = ['fire', 'account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
 
 function mouseHold() {
     if (mouseIsPressed) {
@@ -21,7 +21,8 @@ function loadIcons() {
 
         for (let i = 0; i < iconNames.length; i++) {
             let icon = iconNames[i];
-            loadImage(`https://freys1er.github.io/Hive/icons/${icon}.svg`,
+            print(icon);
+            loadImage(`freys1er.github.io/Hive/icons/${icon}.svg`,
                 (img) => {
                     icons[icon] = img;
                     loadedIcons.push(img);
@@ -57,7 +58,13 @@ function init() {
         navBarColor: '#1E3A5F',       // Dark Slate Blue (replaces Dark Olive Green for navigation bar)
         taskFill: '#2B3E50',          // Darker Air Force Blue (no change)
         taskNew: '#37474F',           // Darker Cadet Grey (no change)
-        taskHover: '#6B7280'          // Darker Lighter Air Force Blue (no change)
+        taskHover: '#6B7280',          // Darker Lighter Air Force Blue (no change)
+        warning: '#FF0000',          // Red (no change)
+        error: '#FF0000',            // Red (no change)
+        success: '#00FF00',          // Green (no change)
+        info: '#0000FF',             // Blue (no change)
+        alert: '#FFA500',            // Orange (no change)
+        note: '#FFFF00',             // Yellow (no change)
     };
 
     xPos = [
