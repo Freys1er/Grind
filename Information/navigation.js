@@ -120,7 +120,7 @@ function displayNav(x) {
         icons.notes,
         icons.tools
     ];
-    const names = ["-", "-", "Home", "-", "-"];
+    const names = ["-", "-", "Home", "-", "Create"];
 
     fill(255);
     textSize(18);
@@ -154,7 +154,7 @@ function displayNav(x) {
     }
 
     if (hold > 0 && hold < 10 && !mouseIsPressed && mouseY > height * 0.91) {
-        const urls = ["Information","Information","Information","Information","Information"];
+        const urls = ["Information","Information","Information", "Information","Information/Create"];
         safeReplace(urls[x - 1]);
     }
 

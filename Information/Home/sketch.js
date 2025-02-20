@@ -538,13 +538,13 @@ function flashcards() {
   if (!mouseIsPressed) {
     wait = false;
     //KNOWN
+    options.left = "KNOWN";
     if (card.shift * 2 < -width / 2) {
       print("The user knew: " + file[card.number].question);
       file[card.number].rating += 1 / (millis() - timer_start);
       wait = true;
       ans = false;
-
-      options.left = "KNOWN";
+      options.right = "REVEAL";
     }
     if (card.shift * 2 > width / 2 && ans) {
       //FORGOT
