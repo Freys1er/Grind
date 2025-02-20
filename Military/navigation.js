@@ -3,7 +3,7 @@ let xPos = [];
 let t = 0;
 let hold = 0;
 
-const iconNames = ['fire', 'account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
+const iconNames = ['account', 'cancel', 'chat', 'dropdown', 'event', 'google', 'home', 'notes', 'people', 'secret', 'share', 'status', 'stats', 'tasks', 'tools', 'vote'];
 
 function mouseHold() {
     if (mouseIsPressed) {
@@ -21,7 +21,7 @@ function loadIcons() {
 
         for (let i = 0; i < iconNames.length; i++) {
             let icon = iconNames[i];
-            loadImage(`freys1er.github.io/Hive/icons/${icon}.svg`,
+            loadImage(`https://freys1er.github.io/Hive/icons/${icon}.svg`,
                 (img) => {
                     icons[icon] = img;
                     loadedIcons.push(img);
@@ -248,7 +248,7 @@ function loading() {
     textAlign(CENTER, CENTER);
     fill(255);
     if (frameCount > 100) {
-        text("This is taking longer then usual...", width / 2, height * 0.8);
+        text("This program is ass", width / 2, height * 0.8);
     }
 }
 function getPoint(ax, ay, cx, cy, z) {

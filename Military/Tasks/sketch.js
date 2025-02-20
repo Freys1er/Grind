@@ -64,7 +64,6 @@ function displayTasks() {
       textAlign(RIGHT,CENTER);
       textSize(18);
       text(time_left, width * 0.95, height * 0.04);
-      image(icons.fire, width * 0.95 - height * 0.04, height * 0.01, height * 0.04, height * 0.04);
     }
 
     if (streak > 0) {
