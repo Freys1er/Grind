@@ -21,7 +21,6 @@ function loadIcons() {
 
         for (let i = 0; i < iconNames.length; i++) {
             let icon = iconNames[i];
-            print(icon);
             loadImage(`freys1er.github.io/Hive/icons/${icon}.svg`,
                 (img) => {
                     icons[icon] = img;
