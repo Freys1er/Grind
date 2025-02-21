@@ -64,6 +64,43 @@ function init() {
         info: '#0000FF',             // Blue (no change)
         alert: '#FFA500',            // Orange (no change)
         note: '#FFFF00',             // Yellow (no change)
+        italic: "#AFAFAF", // Italic text style
+        textbox: {
+            "background-color": "#1c1c1e", // Dark background color
+            color: "#f5f5f5", // Light text color
+            border: "#5f5f5f", // Light border
+            padding: "10px", // Padding for the text box
+            "font-family": "Arial, sans-serif", // Font family
+        },
+        inputarea: {
+            "background-color": "#1c1c1e", // Dark background color for input area
+            color: "#1E1E1E", // Light text color for input area
+            border: "#323232", // Light border for input area
+            padding: "10px", // Padding for the input area
+            "font-family": "Arial, sans-serif", // Font family
+        },
+        background: "#1c1c1e", // Dark background color
+        header: {
+            color: "#f5f5f5", // Light text color for header
+            "font-size": "24px", // Font size for header
+            "font-family": "Arial, sans-serif", // Font family for header
+        },
+        title: {
+            color: "#f5f5f5", // Light text color for title
+            "font-size": "36px", // Font size for title
+            "font-family": "Arial, sans-serif", // Font family for title
+            "font-weight": "bold", // Bold text for title
+        },
+        button: {
+            hover: {
+                on: "rgb(10, 100, 200)",
+                off: "rgb(170,170,170)",
+            },
+            default: {
+                on: "rgb(10, 132, 255)",
+                off: "rgb(145,145,145)",
+            },
+        }
     };
 
     xPos = [
@@ -88,13 +125,13 @@ function init() {
 function safeReplace(newDir) {
     // Get the current URL using window.location.href
     let url = window.location.href;
-  
+
     // Use URL constructor to parse the URL
     let parsedURL = new URL(url);
-  
+
     // Get the base URL (protocol + hostname)
     let baseURL = parsedURL.protocol + '//' + parsedURL.hostname;
-  
+
     // Check if the URL contains '/Hive' and ends with or after '/Hive'
     let path = parsedURL.pathname;
     if (path.includes('/Hive')) {
@@ -102,16 +139,16 @@ function safeReplace(newDir) {
         let hiveIndex = path.indexOf('/Hive') + '/Hive'.length;
         baseURL += path.slice(0, hiveIndex);
     }
-  
+
     // Add the new directory
     let newUrl = baseURL + '/' + newDir + "/";
-  
+
     console.log(url, newUrl);
-  
+
     if (url !== newUrl) {
         window.location.href = (newUrl);
     }
-  }
+}
 function displayNav(x) {
     const images = [
         icons.tasks,
