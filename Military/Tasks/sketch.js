@@ -38,6 +38,9 @@ function setup() {
 
   task.animate = 0;
   task.display = false;
+
+  drag.create = false;
+  animation.create = 0;
 }
 
 
@@ -53,6 +56,9 @@ function epoch(date = null) {
 }
 
 let task = {};
+let drag = {};
+let animation = {};
+
 function draw() {
   background(style.background);
   if (loading_data) {
@@ -62,21 +68,53 @@ function draw() {
     inputs.description.show();
 
     push();
-    translate(0, animate(task.animate, 0, 20, height, 0));
+    translate(0,animation.create);
     create_task();
     pop();
 
     if (task.animate < 20) {
       task.animate++;
+      animation.create = animate(task.animate, 0, 20, height, 0);
+    } else {
+      if (mouseY > animation.create + height * 0.01 && mouseY < animation.create + height * 0.1 && mouseIsPressed) {
+        drag.create = true;
+        task.animate = 0;
+      }
+      if (!mouseIsPressed && drag.create) {
+        drag.create = false;
+
+        if (animation.create > height * 0.05) {
+          task.display = false;
+          tasks.push({
+            name: inputs.title.value(),
+            description: inputs.description.value(),
+            created: epoch(),
+            last: epoch(),
+          });
+          updateTasks();
+          storeItem("tasks", tasks);
+          inputs.title.value("");
+          inputs.description.value("");
+
+          animation.create = 0;
+        }
+      }
     }
+
+    if (drag.create) {
+      animation.create = mouseY - height * 0.05;
+    }
+    fill(255,0,0);
+    text(mouseY,10,10);
+
   } else {
     displayTasks();
     displayNav(1);
   }
 
   if (!task.display) {
-    inputs.title.hide();
-    inputs.description.hide();
+    //inputs.title.hide();
+    //inputs.description.hide();
   }
 
   mouseHold();
@@ -173,20 +211,17 @@ function displayTasks() {
   textStyle(BOLD);
   text("Create", width * 0.88, height * 0.04);
 
-  if (mouseX>width*0.8 && mouseY < height/15 && mouseIsPressed) {
+  if (mouseX > width * 0.8 && mouseY < height / 15 && mouseIsPressed) {
     task.display = true;
   }
 }
-
-
-
 
 function create_task() {
   fill(10);
   rect(0, height * 0.05, width, height * 2, 20);
 
   noStroke();
-  fill(style.background);
+  fill(style.header.color);
   rect(0, height * 0.05, width, height * 0.04, 20);
   rect(0, height * 0.07, width, height * 0.04);
 
@@ -198,7 +233,7 @@ function create_task() {
   fill(150);
   rect(width * 0.45, height * 0.06, width * 0.1, height / 120, 20);
 
-  fill(style.header.color);
+  fill(style.title.color);
   textSize(20);
   textStyle(BOLD);
   textAlign(CENTER, CENTER);

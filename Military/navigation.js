@@ -79,9 +79,8 @@ function init() {
             padding: "10px", // Padding for the input area
             "font-family": "Arial, sans-serif", // Font family
         },
-        background: "#1c1c1e", // Dark background color
         header: {
-            color: "#f5f5f5", // Light text color for header
+            color: "#111111", // Light text color for header
             "font-size": "24px", // Font size for header
             "font-family": "Arial, sans-serif", // Font family for header
         },
